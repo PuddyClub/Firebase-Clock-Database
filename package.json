@@ -22,6 +22,7 @@
     "array-uniq": "^2.1.0",
     "clone": "^2.1.2",
     "for-promise": "^1.0.0",
+    "lodash": "^4.17.20",
     "moment-timezone": "^0.5.32",
     "puddy-lib": "git+https://github.com/TinyPudding/Puddy-Lib.git"
   },
