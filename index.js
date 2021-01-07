@@ -186,19 +186,24 @@ clock_module.new = function (data) {
         // Results
         const results = {};
 
-        // Tester URL
-        results[clockCfg.id + 'Test'] = functions.https.onRequest(async (req, res) => {
+        // Prepare Result
+        if (typeof clockCfg.id === "string" && clockCfg.id.length > 0 && typeof clockCfg.schedule === "string" && clockCfg.schedule.length > 0) {
 
-            // Make the Test
-            await tinyClock();
+            // Tester URL
+            results[clockCfg.id + 'Test'] = functions.https.onRequest(async (req, res) => {
 
-            // Complete Request
-            return res.send('Test Complete!');
+                // Make the Test
+                await tinyClock();
 
-        });
+                // Complete Request
+                return res.send('Clock Test Complete!');
 
-        // Main
-        results[clockCfg.id] = functions.pubsub.schedule(clockCfg.schedule).onRun(tinyClock);
+            });
+
+            // Main
+            results[clockCfg.id] = functions.pubsub.schedule(clockCfg.schedule).onRun(tinyClock);
+
+        }
 
         // Return
         return results;
