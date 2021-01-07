@@ -211,7 +211,8 @@ clock_module.new = function (data = {}, exportBase = null) {
                         // Insert Custom Data
                         custom_module_options.tz[timezone_list[item]] = {
                             db: db_tz,
-                            data: timezone.clock[timezone_list[item]]
+                            data: timezone.clock[timezone_list[item]],
+                            now: now_timezone
                         };
 
                     }
