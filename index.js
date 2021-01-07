@@ -29,6 +29,11 @@ clock_module.new = function (data) {
             ref: ''
         });
 
+        // Custom Module Config
+        if (!Array.isArray(data.modules)) {
+            data.modules = [];
+        }
+
         // Exist Ref
         let existRef = (typeof clockCfg.ref === "string" && clockCfg.ref.length > 0);
 
@@ -44,6 +49,9 @@ clock_module.new = function (data) {
 
         // For Promise
         const forPromise = require('for-promise');
+
+        // Prepare Custom Module
+        const custom_module_manager = require('puddy-lib/libs/custom_module_loader');
 
         // Nothing Ref
         let db = null;
@@ -87,17 +95,26 @@ clock_module.new = function (data) {
         // Function
         const tinyClock = async () => {
 
+            // Custom Module Items
+            const custom_module_options = { db: db, tz: {} };
+
             // Get Timezone List
             const timezone_list = moment.tz.names();
             const timezone = { clock: {} };
             const now = moment();
 
+            // Insert Custom Data
+            custom_module_options.now = now;
+            custom_module_options.timezone_list = timezone_list;
+
             // Module Name
             timezone.module = 'moment-timezone';
+            custom_module_options.module = timezone.module;
             db.module.set(timezone.module);
 
             // Weeks In Year
             timezone.weeksInYear = now.weeksInYear();
+            custom_module_options.weeksInYear = timezone.weeksInYear;
             db.weeksInYear.set(timezone.weeksInYear);
 
             // Get All Times
@@ -168,6 +185,12 @@ clock_module.new = function (data) {
                     // Set Timezone Data
                     db_tz.set(timezone.clock[timezone_list[item]]).then(() => { fn(); }).catch(err => { fn_error(err); });
 
+                    // Insert Custom Data
+                    custom_module_options.tz[timezone_list[item]] = {
+                        db: db_tz,
+                        data: timezone.clock[timezone_list[item]]
+                    };
+
                 }
 
                 // Nope
@@ -177,6 +200,9 @@ clock_module.new = function (data) {
                 return;
 
             });
+
+            // Send Custom Module
+            await custom_module_manager.run(data.modules, custom_module_options, 'clockUpdate');;
 
             // Complete
             return;
