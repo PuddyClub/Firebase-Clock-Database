@@ -28,6 +28,7 @@ clock_module.new = function (data = {}, exportBase = null) {
 
             // Create Clock Settings
             const clockCfg = _.defaultsDeep({}, data.clock, {
+                universalTimezone: 'Universal',
                 id: 'clock',
                 schedule: 'every 1 minutes',
                 ref: '',
@@ -73,7 +74,10 @@ clock_module.new = function (data = {}, exportBase = null) {
                     weeksInYear: app.db.ref('weeksInYear'),
 
                     // Clock
-                    clock: app.db.ref('clock')
+                    clock: app.db.ref('clock'),
+
+                    // Universal Cache
+                    universal_cache: app.db.ref('universal_cache')
 
                 };
 
@@ -92,11 +96,61 @@ clock_module.new = function (data = {}, exportBase = null) {
                     weeksInYear: app.db.ref(clockCfg.ref).child('weeksInYear'),
 
                     // Clock
-                    clock: app.db.ref(clockCfg.ref).child('clock')
+                    clock: app.db.ref(clockCfg.ref).child('clock'),
+
+                    // Universal Cache
+                    universal_cache: app.db.ref(clockCfg.ref).child('universal_cache')
 
                 };
 
             }
+
+            // Clock Generator
+            const clock_generator = function (now_timezone) {
+
+                return {
+
+                    // Module
+                    module: timezone.module,
+
+                    // Hour
+                    hour: now_timezone.hour(),
+
+                    // Hour
+                    minute: now_timezone.minute(),
+
+                    // Day
+                    day: now_timezone.date(),
+
+                    // Month
+                    month: now_timezone.month(),
+
+                    // Month
+                    year: now_timezone.year(),
+
+                    // Week Day
+                    weekDay: now_timezone.day(),
+
+                    // Year Day
+                    yearDay: now_timezone.dayOfYear(),
+
+                    // Week Year
+                    weekYear: now_timezone.week(),
+
+                    // Locale Data
+                    locale: {
+
+                        // Week Day
+                        weekDay: now_timezone.weekday(),
+
+                        // Week Year
+                        weekYear: now_timezone.weekYear(),
+
+                    }
+
+                };
+
+            };
 
             // Function
             const tinyClock = async () => {
@@ -137,6 +191,7 @@ clock_module.new = function (data = {}, exportBase = null) {
                 // Get All Times
                 await forPromise(timezone_list, function (item, fn, fn_error) {
 
+                    // Get Timezone
                     if (typeof timezone_list[item] === "string") {
 
                         // Prepare Database
@@ -154,50 +209,8 @@ clock_module.new = function (data = {}, exportBase = null) {
                         zone.offsets = arrayUniq(zone.offsets);
 
                         // New Object
-                        timezone.clock[timezone_list[item]] = {
-
-                            // Abbr
-                            zone: clone(zone),
-
-                            // Module
-                            module: timezone.module,
-
-                            // Hour
-                            hour: now_timezone.hour(),
-
-                            // Hour
-                            minute: now_timezone.minute(),
-
-                            // Day
-                            day: now_timezone.date(),
-
-                            // Month
-                            month: now_timezone.month(),
-
-                            // Month
-                            year: now_timezone.year(),
-
-                            // Week Day
-                            weekDay: now_timezone.day(),
-
-                            // Year Day
-                            yearDay: now_timezone.dayOfYear(),
-
-                            // Week Year
-                            weekYear: now_timezone.week(),
-
-                            // Locale Data
-                            locale: {
-
-                                // Week Day
-                                weekDay: now_timezone.weekday(),
-
-                                // Week Year
-                                weekYear: now_timezone.weekYear(),
-
-                            }
-
-                        };
+                        timezone.clock[timezone_list[item]] = clock_generator(now_timezone);
+                        timezone.clock[timezone_list[item]].zone = clone(zone);
 
                         // Set Timezone Data
                         db_tz.set(timezone.clock[timezone_list[item]]).then(() => { fn(); }).catch(err => { fn_error(err); });
@@ -218,6 +231,28 @@ clock_module.new = function (data = {}, exportBase = null) {
                     return;
 
                 });
+
+                // Is String Universal Timezone
+                if (typeof clockCfg.universalTimezone === "string" && clockCfg.universalTimezone.length > 0 && custom_module_options.tz[clockCfg.universalTimezone]) {
+
+                    // Universal Timezone
+                    const universal_tz = custom_module_options.tz[clockCfg.universalTimezone];
+
+                    // Universal Result
+                    const universal_result = [];
+
+                    // Get Values
+                    for (let item = 0; i < 13; i++) {
+
+                        // TRABALHAR AQUI! EU PRECISO DE UM SISTEMA QUE DETECTA O TEMPO RESTANTE PARA A PRÓXIMA HORA
+                        /* universal_result.push(clock_generator(universal_tz.now).add(-10, 'minutes')); */
+
+                    }
+
+                    // Set Item
+                    /* await db.universal_cache.set(universal_result); */
+
+                }
 
                 // Send Custom Module
                 await custom_module_manager.run(data.modules, custom_module_options, 'clockUpdate');;
