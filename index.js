@@ -127,7 +127,7 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                 // Custom Timezone List
                 else {
-                    timezone_list = super_string_filter(timezone_names, clockCfg.timezones); 
+                    timezone_list = super_string_filter(timezone_names, clockCfg.timezones);
                 }
 
                 // Insert Custom Data
@@ -228,7 +228,7 @@ clock_module.new = function (data = {}, exportBase = null) {
             };
 
             // Results
-            const results = {};
+            let results = {};
 
             // Prepare Result
             if (typeof clockCfg.id === "string" && clockCfg.id.length > 0 && typeof clockCfg.schedule === "string" && clockCfg.schedule.length > 0) {
@@ -253,6 +253,9 @@ clock_module.new = function (data = {}, exportBase = null) {
                 }
 
             }
+
+            // Alternative
+            else { results = tinyClock; }
 
             // Return
             return results;
