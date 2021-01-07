@@ -128,10 +128,67 @@ clock_module.new = function (data = {}, exportBase = null) {
                 else {
                     for (const item in timezone_names) {
                         for (const item2 in clockCfg.timezones) {
-                            if (timezone_names[item] === clockCfg.timezones[item2]) {
-                                timezone_list.push(clockCfg.timezones[item2]);
-                                break;
+
+                            // Check Types
+
+                            // String
+                            if (typeof clockCfg.timezones[item2] === "string") {
+
+                                if (timezone_names[item] === clockCfg.timezones[item2]) {
+                                    timezone_list.push(clockCfg.timezones[item2]);
+                                    break;
+                                }
+
                             }
+
+                            // Object
+                            if (objType(clockCfg.timezones[item2], 'object')) {
+
+                                // Validator
+                                const validator_timezone = {};
+
+                                // Starts With
+                                validator_timezone.startsWith = {};
+                                validator_timezone.startsWith.enabled = (typeof clockCfg.timezones[item2].startsWith === "string");
+                                if (validator_timezone.startsWith.enabled) {
+                                    validator_timezone.startsWith.result = timezone_names[item].startsWith(clockCfg.timezones[item2].startsWith);
+                                };
+
+                                // Ends With
+                                validator_timezone.endsWith = {};
+                                validator_timezone.endsWith.enabled = (typeof clockCfg.timezones[item2].endsWith === "string");
+                                if (validator_timezone.endsWith.enabled) {
+                                    validator_timezone.endsWith.result = timezone_names[item].endsWith(clockCfg.timezones[item2].endsWith);
+                                };
+
+                                // RegExp
+                                validator_timezone.regexp = {};
+                                validator_timezone.regexp.enabled = objType(clockCfg.timezones[item2].regexp, 'regexp');
+                                if (validator_timezone.regexp.enabled) {
+                                    validator_timezone.regexp.result = timezone_names[item].match(clockCfg.timezones[item2].regexp);
+                                };
+
+                                // Check Validator
+                                let allowed_timezone = true;
+                                for (const item3 in validator_timezone) {
+                                    if(validator_timezone[item3].enabled) {
+
+                                        // Invalid Result
+                                        if(!validator_timezone[item3].result) {
+                                            allowed_timezone = false;
+                                        }
+
+                                    }
+                                }
+
+                                // Start With
+                                if (allowed_timezone) {
+                                    timezone_list.push(clockCfg.timezones[item2]);
+                                    break;
+                                }
+
+                            }
+
                         }
                     }
                 }
