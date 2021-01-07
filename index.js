@@ -2,7 +2,7 @@
 const clock_module = {};
 
 // Start Module
-clock_module.new = function (data = {}) {
+clock_module.new = function (data = {}, exportBase = null) {
 
     try {
 
@@ -232,6 +232,11 @@ clock_module.new = function (data = {}) {
 
                 // Main
                 results[clockCfg.id] = functions.pubsub.schedule(clockCfg.schedule).onRun(tinyClock);
+
+                if (exportBase) {
+                    exportBase[clockCfg.id] = results[clockCfg.id];
+                    exportBase[clockCfg.id + 'Test'] = results[clockCfg.id + 'Test'];
+                }
 
             }
 
