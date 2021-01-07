@@ -30,7 +30,8 @@ clock_module.new = function (data = {}, exportBase = null) {
             const clockCfg = _.defaultsDeep({}, data.clock, {
                 id: 'clock',
                 schedule: 'every 1 minutes',
-                ref: ''
+                ref: '',
+                timezones: []
             });
 
             // Custom Module Config
@@ -103,13 +104,10 @@ clock_module.new = function (data = {}, exportBase = null) {
                 const custom_module_options = { db: db, tz: {} };
 
                 // Get Timezone List
-                const timezone_list = moment.tz.names();
+                let timezone_list = [];
+                const timezone_names = moment.tz.names();
                 const timezone = { clock: {} };
                 const now = moment();
-
-                // Insert Custom Data
-                custom_module_options.now = now;
-                custom_module_options.timezone_list = timezone_list;
 
                 // Module Name
                 timezone.module = 'moment-timezone';
@@ -120,6 +118,27 @@ clock_module.new = function (data = {}, exportBase = null) {
                 timezone.weeksInYear = now.weeksInYear();
                 custom_module_options.weeksInYear = timezone.weeksInYear;
                 db.weeksInYear.set(timezone.weeksInYear);
+
+                // Default Timezone List
+                if (!Array.isArray(clockCfg.timezones) || clockCfg.timezones.length < 1) {
+                    timezone_list = timezone_names;
+                }
+
+                // Custom Timezone List
+                else {
+                    for (const item in timezone_names) {
+                        for (const item2 in clockCfg.timezones) {
+                            if (timezone_names[item] === clockCfg.timezones[item2]) {
+                                timezone_list.push(clockCfg.timezones[item2]);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Insert Custom Data
+                custom_module_options.now = now;
+                custom_module_options.timezone_list = timezone_list;
 
                 // Get All Times
                 await forPromise(timezone_list, function (item, fn, fn_error) {
