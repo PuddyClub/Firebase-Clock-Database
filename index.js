@@ -237,6 +237,11 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                     // Universal Timezone
                     const universal_tz = custom_module_options.tz[clockCfg.universalTimezone];
+                    custom_module_options.universal_cache = {};
+
+                    // OLD Data
+                    custom_module_options.universal_cache.old = await firebase.getDBAsync(db.universal_cache);
+                    custom_module_options.universal_cache.old = firebase.getDBValue(custom_module_options.universal_cache.old);
 
                     // Create Universal Cache
                     const create_universal_cache = function () {
@@ -253,7 +258,6 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                     // Universal Result
                     let universal_cache = create_universal_cache();
-                    custom_module_options.universal_cache = {};
                     custom_module_options.universal_cache.data = create_universal_cache();
 
                     // Check Times
