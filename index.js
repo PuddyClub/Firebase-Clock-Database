@@ -289,8 +289,11 @@ clock_module.new = function (data = {}, exportBase = null) {
                                 // Get Index
                                 const tiny_index = custom_module_options.universal_cache.new.data[item2].length - 1;
 
-                                // Prepare Custom Module
+                                // Insert Type
                                 custom_module_options.universal_cache.new.data[item2][tiny_index].type = check_times[item];
+                                universal_cache[item2][tiny_index].type = check_times[item];
+
+                                // Prepare Custom Module
                                 custom_module_options.universal_cache.new.data[item2][tiny_index].now = clock_checker;
                                 custom_module_options.universal_cache.new.data[item2][tiny_index].db = db.universal_cache.child('data').child(item2).child(tiny_index);
 
