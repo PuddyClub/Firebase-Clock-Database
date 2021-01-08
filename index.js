@@ -262,7 +262,7 @@ clock_module.new = function (data = {}, exportBase = null) {
                     await forPromise(check_times, function (item, fn, fn_error, extra) {
 
                         // Clock Checker
-                        const clock_checker = universal_tz.now.add(check_times[item], 'minutes');
+                        const clock_checker = universal_tz.now.clone().add(check_times[item], 'minutes');
 
                         // Check Result
                         const extra_await = extra(universal_cache);
