@@ -237,7 +237,7 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                     // Universal Timezone
                     const universal_tz = custom_module_options.tz[clockCfg.universalTimezone];
-                    custom_module_options.universal_cache = {};
+                    custom_module_options.universal_cache = { new: {} };
 
                     // OLD Data
                     custom_module_options.universal_cache.old = await firebase.getDBAsync(db.universal_cache);
@@ -258,11 +258,11 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                     // Universal Result
                     let universal_cache = create_universal_cache();
-                    custom_module_options.universal_cache.data = create_universal_cache();
+                    custom_module_options.universal_cache.new.data = create_universal_cache();
 
                     // Check Times
                     const check_times = [-60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60];
-                    custom_module_options.universal_cache.checker = check_times;
+                    custom_module_options.universal_cache.new.checker = check_times;
                     await db.universal_cache.child('checker').set(check_times);
 
                     // Get Values
@@ -284,17 +284,17 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                                 // Insert Clock Values
                                 universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
-                                custom_module_options.universal_cache.data[item2].push(clock_generator(clock_checker, timezone.module));
-                                
+                                custom_module_options.universal_cache.new.data[item2].push(clock_generator(clock_checker, timezone.module));
+
                                 // Get Index
-                                const tiny_index = custom_module_options.universal_cache.data[item2].length - 1;
-                                
+                                const tiny_index = custom_module_options.universal_cache.new.data[item2].length - 1;
+
                                 // Prepare Custom Module
-                                custom_module_options.universal_cache.data[item2][tiny_index].now = clock_checker;
-                                custom_module_options.universal_cache.data[item2][tiny_index].db = db.universal_cache.child('data').child(item2).child(tiny_index);
+                                custom_module_options.universal_cache.new.data[item2][tiny_index].now = clock_checker;
+                                custom_module_options.universal_cache.new.data[item2][tiny_index].db = db.universal_cache.child('data').child(item2).child(tiny_index);
 
                                 // Add Database
-                                custom_module_options.universal_cache.data[item2][tiny_index].db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
+                                custom_module_options.universal_cache.new.data[item2][tiny_index].db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
 
                             }
 
