@@ -268,9 +268,8 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                             // Check Function
                             if (
-                                typeof clock_checker[universal_cache[item2]] === "function" &&
-                                typeof universal_tz[universal_cache[item2]] === "function" &&
-                                clock_checker[universal_cache[item2]]() === universal_tz[universal_cache[item2]]()
+                                typeof clock_checker[item2] === "function" && typeof universal_tz[item2] === "function" &&
+                                clock_checker[item2]() === universal_tz[item2]()
                             ) {
 
                                 // Insert Values
