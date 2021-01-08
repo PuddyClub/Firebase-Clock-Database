@@ -276,6 +276,9 @@ clock_module.new = function (data = {}, exportBase = null) {
                         const extra_await = extra(universal_cache);
                         extra_await.run(function (item2, fn, fn_error) {
 
+                            // The DB
+                            const item_db = db.universal_cache.child('data').child(item2).child(tiny_index);
+
                             // Check Function
                             if (
                                 typeof clock_checker[item2] === "function" && typeof universal_tz.now[item2] === "function" &&
@@ -295,15 +298,17 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                                 // Prepare Custom Module
                                 custom_module_options.universal_cache.new.data[item2][tiny_index].now = clock_checker;
-                                custom_module_options.universal_cache.new.data[item2][tiny_index].db = db.universal_cache.child('data').child(item2).child(tiny_index);
+                                custom_module_options.universal_cache.new.data[item2][tiny_index].db = item_db;
 
                                 // Add Database
-                                custom_module_options.universal_cache.new.data[item2][tiny_index].db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
+                                item_db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
 
                             }
 
-                            // Nope
-                            else { fn(); }
+                            // Nope! Remove
+                            else { 
+                                item_db.remove().then(() => { fn(); return; }).catch(err => { fn_error(err); return; }); 
+                            }
 
                             return;
 
