@@ -257,13 +257,14 @@ clock_module.new = function (data = {}, exportBase = null) {
                     const check_times = [-60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60];
 
                     // Get Values
-                    await forPromise(check_times, function (item, fn, fn_error) {
+                    await forPromise(check_times, function (item, fn, fn_error, extra) {
 
                         // Clock Checker
                         const clock_checker = universal_tz.now.add(check_times[item], 'minutes');
 
                         // Check Result
-                        for (const item2 in universal_cache) {
+                        const extra_await = extra(universal_cache);
+                        extra_await.run(function (item2, fn, fn_error) {
 
                             // Check Function
                             if (
@@ -287,7 +288,11 @@ clock_module.new = function (data = {}, exportBase = null) {
                             // Nope
                             else { fn(); }
 
-                        }
+                            return;
+
+                        });
+
+                        return;
 
                     });
 
