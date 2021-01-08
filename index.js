@@ -264,20 +264,27 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                         // Check Result
                         for (const item2 in universal_cache) {
+
+                            // Check Function
                             if (
                                 typeof clock_checker[universal_cache[item2]] === "function" &&
                                 typeof universal_tz[universal_cache[item2]] === "function" &&
                                 clock_checker[universal_cache[item2]]() === universal_tz[universal_cache[item2]]()
                             ) {
+
+                                // Insert Values
                                 universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
                                 custom_module_options.universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
                                 const tiny_index = custom_module_options.universal_cache[item2].length - 1;
                                 custom_module_options.universal_cache[item2][tiny_index].now = clock_checker;
-                            }
-                        }
+                                custom_module_options.universal_cache[item2][tiny_index].db = db.universal_cache.child(item2).child(tiny_index);
 
-                        // Add Database
-                        db.universal_cache.child(item2).set(universal_cache[item2]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
+                                // Add Database
+                                custom_module_options.universal_cache[item2][tiny_index].db.set(universal_cache[item2]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
+
+                            }
+
+                        }
 
                     });
 
