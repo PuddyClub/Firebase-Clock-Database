@@ -269,14 +269,10 @@ clock_module.new = function (data = {}, exportBase = null) {
                         const extra_await = extra(universal_cache);
                         extra_await.run(function (item2, fn, fn_error) {
 
-                            console.log(clock_checker[item2]);
-                            console.log(universal_tz[item2]);
-                            console.log(item2);
-
                             // Check Function
                             if (
-                                typeof clock_checker[item2] === "function" && typeof universal_tz[item2] === "function" &&
-                                clock_checker[item2]() === universal_tz[item2]()
+                                typeof clock_checker[item2] === "function" && typeof universal_tz.now[item2] === "function" &&
+                                clock_checker[item2]() === universal_tz.now[item2]()
                             ) {
 
                                 // Insert Clock Values
