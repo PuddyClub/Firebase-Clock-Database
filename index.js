@@ -284,6 +284,9 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                             }
 
+                            // Nope
+                            else { fn(); }
+
                         }
 
                     });
