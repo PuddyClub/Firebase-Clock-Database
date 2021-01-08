@@ -253,10 +253,14 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                     // Universal Result
                     let universal_cache = create_universal_cache();
-                    custom_module_options.universal_cache = create_universal_cache();
+                    custom_module_options.universal_cache = {};
+                    custom_module_options.universal_cache.amount = check_times.length;
+                    custom_module_options.universal_cache.data = create_universal_cache();
 
                     // Check Times
                     const check_times = [-60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60];
+                    custom_module_options.universal_cache.checker = check_times;
+                    await db.universal_cache.child('checker').set(check_times);
 
                     // Get Values
                     await forPromise(check_times, function (item, fn, fn_error, extra) {
@@ -277,17 +281,17 @@ clock_module.new = function (data = {}, exportBase = null) {
 
                                 // Insert Clock Values
                                 universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
-                                custom_module_options.universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
+                                custom_module_options.universal_cache.data[item2].push(clock_generator(clock_checker, timezone.module));
                                 
                                 // Get Index
-                                const tiny_index = custom_module_options.universal_cache[item2].length - 1;
+                                const tiny_index = custom_module_options.universal_cache.data[item2].length - 1;
                                 
                                 // Prepare Custom Module
-                                custom_module_options.universal_cache[item2][tiny_index].now = clock_checker;
-                                custom_module_options.universal_cache[item2][tiny_index].db = db.universal_cache.child(item2).child(tiny_index);
+                                custom_module_options.universal_cache.data[item2][tiny_index].now = clock_checker;
+                                custom_module_options.universal_cache.data[item2][tiny_index].db = db.universal_cache.child('data').child(item2).child(tiny_index);
 
                                 // Add Database
-                                custom_module_options.universal_cache[item2][tiny_index].db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
+                                custom_module_options.universal_cache.data[item2][tiny_index].db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
 
                             }
 
