@@ -241,16 +241,29 @@ clock_module.new = function (data = {}, exportBase = null) {
                     // Universal Result
                     const universal_result = [];
 
-                    // Get Values
-                    for (let item = 0; i < 13; i++) {
+                    // Check Times
+                    const check_times = [-60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60];
 
-                        // TRABALHAR AQUI! EU PRECISO DE UM SISTEMA QUE DETECTA O TEMPO RESTANTE PARA A PRÓXIMA HORA
-                        /* universal_result.push(clock_generator(universal_tz.now).add(-10, 'minutes')); */
+                    // Get Values
+                    for (const item in check_times) {
+
+                        // Clock Checker
+                        const clock_checker = universal_tz.now.add(check_times[item], 'minutes');
+
+                        // Is Same Hour
+                        if (
+                            clock_checker.hour() === universal_tz.hour(),
+                            clock_checker.date() === universal_tz.date(),
+                            clock_checker.month() === universal_tz.month(),
+                            clock_checker.year() === universal_tz.hour()
+                        ) {
+                            universal_result.push(clock_generator(clock_checker));
+                        }
 
                     }
 
                     // Set Item
-                    /* await db.universal_cache.set(universal_result); */
+                    await db.universal_cache.set(universal_result);
 
                 }
 
