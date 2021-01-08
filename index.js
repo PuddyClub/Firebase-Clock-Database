@@ -254,7 +254,6 @@ clock_module.new = function (data = {}, exportBase = null) {
                     // Universal Result
                     let universal_cache = create_universal_cache();
                     custom_module_options.universal_cache = {};
-                    custom_module_options.universal_cache.amount = check_times.length;
                     custom_module_options.universal_cache.data = create_universal_cache();
 
                     // Check Times
