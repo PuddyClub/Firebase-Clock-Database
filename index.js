@@ -238,39 +238,48 @@ clock_module.new = function (data = {}, exportBase = null) {
                     // Universal Timezone
                     const universal_tz = custom_module_options.tz[clockCfg.universalTimezone];
 
-                    // Universal Result
-                    const universal_result = {
-                        hour: [],
-                        day: [],
-                        date: [],
-                        month: [],
-                        year: []
+                    // Create Universal Cache
+                    const create_universal_cache = function () {
+                        return {
+                            hour: [],
+                            day: [],
+                            date: [],
+                            month: [],
+                            year: []
+                        };
                     };
+
+                    // Universal Result
+                    let universal_cache = create_universal_cache();
+                    custom_module_options.universal_cache = create_universal_cache();
 
                     // Check Times
                     const check_times = [-60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60];
 
                     // Get Values
-                    for (const item in check_times) {
+                    await forPromise(check_times, function (item, fn, fn_error) {
 
                         // Clock Checker
                         const clock_checker = universal_tz.now.add(check_times[item], 'minutes');
 
                         // Check Result
-                        for (const item2 in universal_result) {
+                        for (const item2 in universal_cache) {
                             if (
-                                typeof clock_checker[universal_result[item2]] === "function" &&
-                                typeof universal_tz[universal_result[item2]] === "function" &&
-                                clock_checker[universal_result[item2]]() === universal_tz[universal_result[item2]]()
+                                typeof clock_checker[universal_cache[item2]] === "function" &&
+                                typeof universal_tz[universal_cache[item2]] === "function" &&
+                                clock_checker[universal_cache[item2]]() === universal_tz[universal_cache[item2]]()
                             ) {
-                                universal_result[item2].push(clock_generator(clock_checker));
+                                universal_cache[item2].push(clock_generator(clock_checker));
+                                custom_module_options.universal_cache[item2].push(clock_generator(clock_checker));
+                                const tiny_index = custom_module_options.universal_cache[item2].length - 1;
+                                custom_module_options.universal_cache[item2][tiny_index].now = clock_checker;
                             }
                         }
 
-                    }
+                        // Add Database
+                        db.universal_cache.child(item2).set(universal_cache[item2]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
 
-                    // Set Item
-                    await db.universal_cache.set(universal_result);
+                    });
 
                 }
 
