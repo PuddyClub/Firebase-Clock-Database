@@ -106,12 +106,12 @@ clock_module.new = function (data = {}, exportBase = null) {
             }
 
             // Clock Generator
-            const clock_generator = function (now_timezone) {
+            const clock_generator = function (now_timezone, timezone_module) {
 
                 return {
 
                     // Module
-                    module: timezone.module,
+                    module: timezone_module,
 
                     // Hour
                     hour: now_timezone.hour(),
@@ -209,7 +209,7 @@ clock_module.new = function (data = {}, exportBase = null) {
                         zone.offsets = arrayUniq(zone.offsets);
 
                         // New Object
-                        timezone.clock[timezone_list[item]] = clock_generator(now_timezone);
+                        timezone.clock[timezone_list[item]] = clock_generator(now_timezone, timezone.module);
                         timezone.clock[timezone_list[item]].zone = clone(zone);
 
                         // Set Timezone Data
@@ -269,8 +269,8 @@ clock_module.new = function (data = {}, exportBase = null) {
                                 typeof universal_tz[universal_cache[item2]] === "function" &&
                                 clock_checker[universal_cache[item2]]() === universal_tz[universal_cache[item2]]()
                             ) {
-                                universal_cache[item2].push(clock_generator(clock_checker));
-                                custom_module_options.universal_cache[item2].push(clock_generator(clock_checker));
+                                universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
+                                custom_module_options.universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
                                 const tiny_index = custom_module_options.universal_cache[item2].length - 1;
                                 custom_module_options.universal_cache[item2][tiny_index].now = clock_checker;
                             }
