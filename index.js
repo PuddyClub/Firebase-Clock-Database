@@ -198,7 +198,7 @@ clock_module.new = function (data = {}, exportBase = null) {
                         const db_tz = db.clock.child(firebase.databaseEscape(timezone_list[item], true));
 
                         // New Now
-                        const now_timezone = now.tz(timezone_list[item]);
+                        const now_timezone = now.clone().tz(timezone_list[item]);
 
                         // Create Zone
                         const zone = clone(moment.tz.zone(timezone_list[item]));
@@ -262,7 +262,8 @@ clock_module.new = function (data = {}, exportBase = null) {
                     await forPromise(check_times, function (item, fn, fn_error, extra) {
 
                         // Clock Checker
-                        const clock_checker = universal_tz.now.clone().add(check_times[item], 'minutes');
+                        const clock_checker = universal_tz.now.clone();
+                        clock_checker.add(check_times[item], 'minutes');
 
                         // Check Result
                         const extra_await = extra(universal_cache);
