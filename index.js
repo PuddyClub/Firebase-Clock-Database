@@ -241,6 +241,8 @@ clock_module.new = function (data = {}, exportBase = null) {
                     // Create Universal Cache
                     const create_universal_cache = function () {
                         return {
+                            second: [],
+                            minute: [],
                             hour: [],
                             day: [],
                             date: [],
@@ -272,15 +274,19 @@ clock_module.new = function (data = {}, exportBase = null) {
                                 clock_checker[item2]() === universal_tz[item2]()
                             ) {
 
-                                // Insert Values
+                                // Insert Clock Values
                                 universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
                                 custom_module_options.universal_cache[item2].push(clock_generator(clock_checker, timezone.module));
+                                
+                                // Get Index
                                 const tiny_index = custom_module_options.universal_cache[item2].length - 1;
+                                
+                                // Prepare Custom Module
                                 custom_module_options.universal_cache[item2][tiny_index].now = clock_checker;
                                 custom_module_options.universal_cache[item2][tiny_index].db = db.universal_cache.child(item2).child(tiny_index);
 
                                 // Add Database
-                                custom_module_options.universal_cache[item2][tiny_index].db.set(universal_cache[item2]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
+                                custom_module_options.universal_cache[item2][tiny_index].db.set(universal_cache[item2][tiny_index]).then(() => { fn(); return; }).catch(err => { fn_error(err); return; });
 
                             }
 
