@@ -120,7 +120,7 @@ clock_module.new = function (data = {}, exportBase = null) {
                     minute: now_timezone.minute(),
 
                     // Day
-                    day: now_timezone.date(),
+                    date: now_timezone.date(),
 
                     // Month
                     month: now_timezone.month(),
@@ -239,7 +239,13 @@ clock_module.new = function (data = {}, exportBase = null) {
                     const universal_tz = custom_module_options.tz[clockCfg.universalTimezone];
 
                     // Universal Result
-                    const universal_result = [];
+                    const universal_result = {
+                        hour: [],
+                        day: [],
+                        date: [],
+                        month: [],
+                        year: []
+                    };
 
                     // Check Times
                     const check_times = [-60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60];
@@ -250,14 +256,15 @@ clock_module.new = function (data = {}, exportBase = null) {
                         // Clock Checker
                         const clock_checker = universal_tz.now.add(check_times[item], 'minutes');
 
-                        // Is Same Hour
-                        if (
-                            clock_checker.hour() === universal_tz.hour(),
-                            clock_checker.date() === universal_tz.date(),
-                            clock_checker.month() === universal_tz.month(),
-                            clock_checker.year() === universal_tz.hour()
-                        ) {
-                            universal_result.push(clock_generator(clock_checker));
+                        // Check Result
+                        for (const item2 in universal_result) {
+                            if (
+                                typeof clock_checker[universal_result[item2]] === "function" &&
+                                typeof universal_tz[universal_result[item2]] === "function" &&
+                                clock_checker[universal_result[item2]]() === universal_tz[universal_result[item2]]()
+                            ) {
+                                universal_result[item2].push(clock_generator(clock_checker));
+                            }
                         }
 
                     }
