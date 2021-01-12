@@ -7,7 +7,7 @@ clock_module.new = function (data = {}, exportBase = null) {
     try {
 
         // Exist Data
-        const objType = require('puddy-lib/get/objType');
+        const objType = require('@tinypudding/puddy-lib/get/objType');
         if (objType(data, 'object')) {
 
             // Prepare Functions
@@ -43,7 +43,7 @@ clock_module.new = function (data = {}, exportBase = null) {
             let existRef = (typeof clockCfg.ref === "string" && clockCfg.ref.length > 0);
 
             // Start Firebase
-            const firebase = require('puddy-lib/firebase');
+            const firebase = require('@tinypudding/puddy-lib/firebase');
             firebase.start(require('firebase-admin'), tinyCfg.options, tinyCfg.firebase);
 
             // App
@@ -51,13 +51,13 @@ clock_module.new = function (data = {}, exportBase = null) {
             const moment = require('moment-timezone');
             const clone = require('clone');
             const arrayUniq = require('array-uniq');
-            const super_string_filter = require('puddy-lib/get/super_string_filter');
+            const super_string_filter = require('@tinypudding/puddy-lib/get/super_string_filter');
 
             // For Promise
             const forPromise = require('for-promise');
 
             // Prepare Custom Module
-            const custom_module_manager = require('puddy-lib/libs/custom_module_loader');
+            const custom_module_manager = require('@tinypudding/puddy-lib/libs/custom_module_loader');
 
             // Nothing Ref
             let db = null;

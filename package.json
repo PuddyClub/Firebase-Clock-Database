@@ -1,5 +1,5 @@
 {
-  "name": "firebase-clock-database",
+  "name": "@tinypudding/firebase-clock-database",
   "version": "1.0.0",
   "description": "Timezone synchronizer using Firebase Database Realtime.",
   "main": "index.js",
@@ -19,12 +19,12 @@
     "url": "https://github.com/TinyPudding/Firebase-Clock-Database/issues"
   },
   "dependencies": {
+    "@tinypudding/puddy-lib": "^1.0.0",
     "array-uniq": "^2.1.0",
     "clone": "^2.1.2",
     "for-promise": "^1.1.2",
     "lodash": "^4.17.20",
-    "moment-timezone": "^0.5.32",
-    "puddy-lib": "git+https://github.com/TinyPudding/Puddy-Lib.git"
+    "moment-timezone": "^0.5.32"
   },
   "homepage": "https://github.com/TinyPudding/Firebase-Clock-Database#readme"
 }
