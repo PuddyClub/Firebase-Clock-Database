@@ -188,7 +188,7 @@ clock_module.new = function (data = {}, exportBase = null) {
                 custom_module_options.timezone_list = timezone_list;
 
                 // Get All Times
-                await forPromise(timezone_list, function (item, fn, fn_error) {
+                await forPromise({ data: timezone_list }, function (item, fn, fn_error) {
 
                     // Get Timezone
                     if (typeof timezone_list[item] === "string") {
