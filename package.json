@@ -22,7 +22,7 @@
     "@tinypudding/puddy-lib": "^1.0.0",
     "array-uniq": "^2.1.0",
     "clone": "^2.1.2",
-    "for-promise": "^1.2.5",
+    "for-promise": "^1.2.6",
     "lodash": "^4.17.20",
     "moment-timezone": "^0.5.32"
   },
