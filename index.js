@@ -4,6 +4,9 @@ const clock_module = {};
 // Start Module
 clock_module.new = function (data = {}, exportBase = null) {
 
+    // Logger
+    const logger = require('@tinypudding/puddy-lib/firebase/logger');
+
     try {
 
         // Exist Data
@@ -277,11 +280,7 @@ clock_module.new = function (data = {}, exportBase = null) {
         // Nope
         else {
 
-            // Error
-            const err = new Error('Start Data Undefined!');
-
-            console.log(err);
-            console.log(err.message);
+            logger.error(new Error('Start Data Undefined!'));
             return null;
 
         }
@@ -290,8 +289,7 @@ clock_module.new = function (data = {}, exportBase = null) {
 
     // Error
     catch (err) {
-        console.log(err);
-        console.log(err.message);
+        logger.error(err);
         return null;
     }
 
