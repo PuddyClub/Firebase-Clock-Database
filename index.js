@@ -5,7 +5,7 @@ const clock_module = {};
 clock_module.new = function (data = {}, exportBase = null) {
 
     // Logger
-    const logger = require('@tinypudding/puddy-lib/firebase/logger');
+    const logger = require('@tinypudding/firebase-lib/logger');
 
     try {
 
@@ -46,7 +46,7 @@ clock_module.new = function (data = {}, exportBase = null) {
             let existRef = (typeof clockCfg.ref === "string" && clockCfg.ref.length > 0);
 
             // Start Firebase
-            const firebase = require('@tinypudding/puddy-lib/firebase');
+            const firebase = require('@tinypudding/firebase-lib');
             firebase.start(require('firebase-admin'), tinyCfg.options, tinyCfg.firebase);
 
             // App
