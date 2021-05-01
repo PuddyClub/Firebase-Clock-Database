@@ -1,6 +1,6 @@
 {
   "name": "@tinypudding/firebase-clock-database",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Timezone synchronizer using Firebase Database Realtime.",
   "main": "index.js",
   "scripts": {
